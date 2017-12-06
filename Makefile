@@ -1,26 +1,29 @@
-NPM := $(shell command -v npm 2> /dev/null)
-NODE := $(shell command -v node 2> /dev/null)
-
-you_need_node = $(error You need to install nodejs. Try `brew install node`. See https://brew.sh for more info)
+BREW := $(shell command -v brew 2> /dev/null)
+you_need_brew = $(error You need to install homebrew. See https://brew.sh for more info)
+NODE=/usr/local/bin/node
+NPM=/usr/local/bin/npm
 
 start: livereloadx
 	sleep 1
 	open http://localhost:35729
 
-livereloadx: node_modules/livereloadx/bin/livereloadx.js
-ifndef NODE
-	$(call you_need_node)
-endif
+livereloadx: node_modules/livereloadx/bin/livereloadx.js $(NODE)
 	$(NODE) node_modules/livereloadx/bin/livereloadx.js -s src/ &
 
-node_modules/livereloadx/bin/livereloadx.js: node_modules/
-	@echo "livereloadx installed!"
-
-node_modules/: package.json
-ifndef NPM
-	$(call you_need_node)
-endif
+node_modules/livereloadx/bin/livereloadx.js: package-lock.json package.json $(NPM)
 	$(NPM) install
+
+$(NPM):
+ifndef BREW
+	$(call you_need_brew)
+endif
+	$(BREW) install node
+
+$(NODE):
+ifndef BREW
+	$(call you_need_brew)
+endif
+	$(BREW) install node
 
 clean:
 	rm -rf node_modules
