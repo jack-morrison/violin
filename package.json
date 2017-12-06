@@ -1,0 +1,7 @@
+{
+	"name": "violin",
+	"version": "1.0.0",
+	"devDependencies": {
+		"livereloadx": "0.3.9"
+	}
+}
